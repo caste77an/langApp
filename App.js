@@ -35,11 +35,20 @@ export default function App() {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        POSITION.setOffset({
+          x: POSITION.x._value,
+          y: POSITION.y._value,
+        });
+      },
       onPanResponderMove: (_, { dx, dy }) => {
         POSITION.setValue({
           x: dx,
           y: dy,
         });
+      },
+      onPanResponderRelease: () => {
+        POSITION.flattenOffset();
       },
     })
   ).current;
@@ -51,7 +60,7 @@ export default function App() {
         style={{
           borderRadius,
           backgroundColor: bgColor,
-          transform: [...POSITION.getTranslateTransform()],
+          transform: POSITION.getTranslateTransform(),
         }}
       />
     </Container>
